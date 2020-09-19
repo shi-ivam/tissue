@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  entry: ['./src/one.js','./src/two.js'],
+  entry: [],
   target:"web",
   output: {
     filename: 'main.js',
