@@ -40,8 +40,8 @@ module.exports = function createTileManager (regl, tiles, settings) {
   const updateState = regl({
     framebuffer: () => nextTileStateTexture,
 
-    vert: glslify.file('./tile-state.vert'),
-    frag: glslify.file('./tile-state.frag'),
+    vert: glslify('./tile-state.vert'),
+    frag: glslify('./tile-state.frag'),
 
     attributes: {
       position: [

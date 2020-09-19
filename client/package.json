@@ -6,28 +6,34 @@
   "scripts": {
     "build": "babel src -d lib",
     "build-webpack": "webpack",
-    "build-webpack-watch": "webpack --watch"
+    "build-webpack-watch": "webpack --watch",
+    "build-b":"browserify src/index.js > dist/main.js"
   },
   "author": "Shivam Kumar",
   "license": "ISC",
   "dependencies": {
-    "3d-view-controls": "^2.2.2",
-    "alea": "^1.0.0",
+    "3d-view-controls": "^2.2.0",
+    "alea": "^0.0.9",
+    "browserify": "^16.5.2",
     "canvas-fit": "^1.5.0",
     "dat-gui": "^0.5.0",
-    "delaunator": "^4.0.1",
+    "delaunator": "^1.0.4",
     "get-plane-normal": "^1.0.0",
-    "gl-mat4": "^1.2.0",
-    "gl-vec2": "^1.3.0",
-    "gl-vec3": "^1.1.3",
-    "glslify": "^7.1.1",
-    "lodash": "^4.17.20",
+    "gl-mat4": "^1.1.4",
+    "gl-vec2": "^1.0.0",
+    "gl-vec3": "^1.0.3",
+    "glslify": "^6.1.0",
     "new-array": "^1.0.0",
-    "regl": "^2.0.1",
-    "simplex-noise": "^2.4.0",
-    "spring-animator": "^2.0.0",
-    "standard": "^14.3.4",
-    "webpack": "^4.44.1"
+    "regl": "^1.3.0",
+    "simplex-noise": "^2.3.0",
+    "spring-animator": "^1.0.3",
+    "standard": "^10.0.3",
+    "webpack": "^4.44.2"
+  },
+  "browserify": {
+    "transform": [
+      "glslify"
+    ]
   },
   "devDependencies": {
     "@babel/cli": "^7.11.6",

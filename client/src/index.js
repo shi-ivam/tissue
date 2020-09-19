@@ -179,8 +179,8 @@ function setup () {
   // })
 
   drawTriangles = regl({
-    vert: glslify.file('./tiles.vert'),
-    frag: glslify.file('./tiles.frag'),
+    vert: glslify('./tiles.vert'),
+    frag: glslify('./tiles.frag'),
     attributes: attributes,
     count: attributes.tileIndex.length
   })
