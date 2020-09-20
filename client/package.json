@@ -4,10 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "babel src -d lib",
-    "build-webpack": "webpack",
-    "build-webpack-watch": "webpack --watch",
-    "build-b": "browserify src/index.js > dist/main.js"
+    "build": "browserify src/index.js > dist/main.js"
   },
   "author": "Shivam Kumar",
   "license": "ISC",
