@@ -1,4 +1,3 @@
-
 const createRegl = require('regl')
 const glsl = require('glslify')
 const mat4 = require('gl-mat4')
@@ -61,6 +60,7 @@ const tracks = [
   {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: 'http://localhost:5000/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
   {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: 'http://localhost:5000/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'}
 ]
+
 setupAudio(tracks).then(([audioAnalyser, audio]) => {
   const audioControls = createAudioControls(audio, tracks)
 
@@ -75,20 +75,22 @@ setupAudio(tracks).then(([audioAnalyser, audio]) => {
   analyser.analyser.maxDecibels = -30
   analyser.analyser.smoothingTimeConstant = 0.5
 
-  titleCard.show().then(() => {
-    css(audioControls.el, {
-      transition: 'opacity 1s linear',
-      opacity: 1
+  titleCard.show()
+    .then(() => new Promise(resolve => setTimeout(resolve, 800)))
+    .then(() => {
+      css(audioControls.el, {
+        transition: 'opacity 1s linear',
+        opacity: 1
+      })
+      css(gui.domElement.parentElement, {
+        transition: 'opacity 1s linear',
+        opacity: 1
+      })
+      window.requestAnimationFrame(loop)
+      audio.play()
+      setup()
+      startLoop()
     })
-    css(gui.domElement.parentElement, {
-      transition: 'opacity 1s linear',
-      opacity: 1
-    })
-    window.requestAnimationFrame(loop)
-    audio.play()
-    setup()
-    startLoop()
-  })
 })
 
 const settings = {
@@ -201,7 +203,9 @@ function setup () {
   renderFrequencies = regl({
     vert: glsl`
       attribute vec3 position;
+
       varying vec4 fragColor;
+
       void main() {
         float actualIntensity = position.z * 1.2;
         fragColor = vec4(vec3(actualIntensity), 1);
@@ -327,15 +331,15 @@ function startLoop () {
 // ///// helpers (to abstract down the line?) //////
 
 function setupAudio (tracks) {
-  const audio = new window.Audio()
-  audio.crossOrigin = 'anonymous'
-  audio.src = tracks[0].path
-
   return new Promise((resolve, reject) => {
+    const audio = new window.Audio()
     audio.addEventListener('canplay', function onLoad () {
       audio.removeEventListener('canplay', onLoad)
       const analyser = createAnalyser(audio, { audible: true, stereo: false })
       resolve([analyser, audio])
     })
+
+    audio.crossOrigin = 'anonymous'
+    audio.src = tracks[0].path
   })
 }
