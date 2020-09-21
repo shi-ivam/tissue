@@ -1,3 +1,6 @@
 # tissue
 
-### Thanks for (Algoexpert)[https://algoexpert.io] for this Awesome Opportunity
+### Thanks for Algoexpert for this Awesome Opportunity
+(Algoexpert)[https://algoexpert.io]
+
+---
