@@ -28,7 +28,7 @@ window.addEventListener('resize', resize)
 const instructions = container.querySelector('.instructions')
 const button = container.querySelector('button')
 
-let rand, points, pixelPicker, rAFToken, start
+let rand, points, pixelPicker, rAFToken, start, isFading
 
 module.exports = function createTitleCard () {
   return {
@@ -52,8 +52,9 @@ module.exports = function createTitleCard () {
   }
 
   function remove () {
+    isFading = true
     css(canvas, {
-      transition: 'opacity 3000ms linear',
+      transition: 'opacity 1500ms linear',
       opacity: 0
     })
     css(instructions, { opacity: 0 })
@@ -61,11 +62,11 @@ module.exports = function createTitleCard () {
       window.removeEventListener('resize', resize)
       window.cancelAnimationFrame(rAFToken)
       container.parentElement.removeChild(container)
-    }, 5000)
+    }, 1700)
   }
 
   function loop () {
-    if (Date.now() - start > 30000) return
+    if (!isFading && (Date.now() - start) > 30000) return
     rAFToken = window.requestAnimationFrame(loop)
     update()
     draw()
@@ -175,7 +176,7 @@ module.exports = function createTitleCard () {
     }
 
     ctx.beginPath()
-    ctx.strokeStyle = `rgba(200, 200, 255, ${settings.lineOpacity / 2})`
+    ctx.strokeStyle = `rgba(200, 200, 255, ${settings.lineOpacity})`
     points.forEach((p) => {
       if (p.line.length > 1) {
         ctx.moveTo(p.line[0][0], p.line[0][1])
@@ -225,9 +226,7 @@ function makePixelPicker (canvas) {
 }
 
 function printText (context, text, size) {
-  // context.font = `bold ${size}px Helvetica`
-  // context.font = `bold ${size}px monospace`
-  context.font = `${size}px Open Sans`
+  context.font = `${size}px "Comforta"`
   context.textAlign = 'center'
   context.textBaseline = 'middle'
   context.fillStyle = 'rgb(0, 0, 0)'
