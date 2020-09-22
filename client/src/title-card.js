@@ -5,7 +5,7 @@ const { createSpring } = require('spring-animator')
 
 const settings = {
   text: 'Tissue',
-  particles: 800,
+  particles: 600,
   dampening: 0.35, // 0.17
   stiffness: 0.85, // 0.9
   speed: 50,
