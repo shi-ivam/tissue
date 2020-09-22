@@ -2,7 +2,6 @@ const createCamera = require('3d-view-controls')
 
 module.exports = function createRoamingCamera (canvas, center, eye) {
   let isRoaming = false
-  let timeout
 
   const camera = createCamera(canvas, {
     zoomSpeed: 4
@@ -57,11 +56,6 @@ module.exports = function createRoamingCamera (canvas, center, eye) {
   }
   function getCenter () {
     return camera.center
-  }
-  function stopRoaming () {
-    clearTimeout(timeout)
-    timeout = null
-    isRoaming = false
   }
 
   window.camera = camera

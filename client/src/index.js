@@ -46,12 +46,15 @@ const renderToFreqMapFBO = regl({ framebuffer: freqMapFBO })
 const renderBloom = createRenderBloom(regl, canvas)
 const renderBlur = createRenderBlur(regl)
 
+
+// Need http://localhost:5000 prefix for the urls to match
+
 const tracks = [
-  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: 'http://localhost:5000/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
-  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: 'http://localhost:5000/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
-  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: 'http://localhost:5000/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
-  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: 'http://localhost:5000/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
-  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: 'http://localhost:5000/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'}
+  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: '/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
+  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: '/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
+  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: '/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
+  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: '/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
+  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: '/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'}
 ]
 
 const isIOS = /(iPhone|iPad)/i.test(navigator.userAgent)
@@ -147,8 +150,6 @@ const gridGUI = gui.addFolder('grid')
 gridGUI.add(settings, 'gridLines', 10, 300).step(1).onChange(setup)
 gridGUI.add(settings, 'linesAnimationOffset', 0, 100).step(1)
 gridGUI.add(settings, 'gridMaxHeight', 0.01, 0.8).step(0.01)
-// gui.add(settings, 'motionBlur')
-// gui.add(settings, 'motionBlurAmount', 0.01, 1).step(0.01)
 
 function setup () {
   const rand = new Alea(settings.seed)
@@ -167,8 +168,6 @@ function setup () {
     const position = [
       Math.cos(rads) * mag,
       Math.sin(rads) * mag
-      // rand() * 2 - 1,
-      // rand() * 2 - 1
     ]
     const id = points.length
     const point = createPoint(id, position)

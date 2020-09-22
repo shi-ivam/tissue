@@ -1,7 +1,8 @@
-import express from 'express';
-import cors from 'cors';
-import expressFileUpload from 'express-fileupload';
-import bodyParser from 'body-parser';
+const express = require('express');
+const cors = require('cors');
+const expressFileUpload = require('express-fileupload');
+const bodyParser = require('body-parser');
+const path = require('path');
 
 // Initialize Express
 
@@ -17,11 +18,7 @@ app.use(express.static('static'))
 // Routes
 
 app.get('/',(req,res) => {
-    res.send(
-        {
-            "Value":"something"
-        }
-    )
+    res.sendFile(path.join(__dirname,'dist','index.html'))
 })
 
 app.listen(process.env.PORT || 5000)

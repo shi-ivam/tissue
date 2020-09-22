@@ -35,7 +35,7 @@
 }
 html, body {
     color: #e2e2e2;
-    background-color: #2f2f2f;
+    background-color: rgb(45, 45, 45);
     font-family: 'Comforta', sans-serif;
     -webkit-font-smoothing: antialiased;
     margin: 0;

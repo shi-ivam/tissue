@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "browserify src/index.js > dist/main.js"
+    "start:dev":"browserify src/index.js > dist/main.js && live-server dist",
+    "build:watch": "watchify src/index.js -o dist/main.js",
+    "build": "browserify src/index.js > dist/main.js",
+    "build:prod": "browserify src/index.js > ../server/static/js/main.js"
   },
   "author": "Shivam Kumar",
   "license": "ISC",
@@ -29,6 +32,7 @@
     "simplex-noise": "^2.3.0",
     "spring-animator": "^1.0.3",
     "standard": "^10.0.3",
+    "watchify": "^3.11.1",
     "web-audio-analyser": "^2.0.1",
     "webpack": "^4.44.2"
   },

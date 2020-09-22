@@ -231,4 +231,4 @@ function printText (context, text, size) {
   context.textBaseline = 'middle'
   context.fillStyle = 'rgb(0, 0, 0)'
   context.fillText(text, context.canvas.width / 2, context.canvas.height / 3)
-}
+} 

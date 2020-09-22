@@ -1,6 +1,6 @@
-# tissue
-
-### Thanks for Algoexpert for this Awesome Opportunity
-[Algoexpert](https://algoexpert.io)
+# Tissue - A 3D Music Visualizer
+Thanks to [Algoexpert](https://algoexpert.io) for this Awesome Opportunity 
 
 ---
+
+To Run Dev Server

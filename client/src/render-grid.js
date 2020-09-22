@@ -60,7 +60,7 @@ module.exports = function createRenderGrid (regl, settings) {
         fragColor = vec4(rgb, opacity);
         gl_Position = projection * view * vec4(position.xy, frequencyVal * gridMaxHeight * multiplier, 1);
       }
-    `,
+    `, 
     frag: glsl`
       precision highp float;
       varying vec4 fragColor;
