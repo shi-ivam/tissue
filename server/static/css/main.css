@@ -166,3 +166,13 @@ html, body {
 .track.selected {
     color: #eee;
 }
+
+.hint {
+    display: none;
+    padding: 20px;
+    font-size: 12px;
+    font-weight: 800;
+    text-align: center;
+    border-top: 1px solid rgb(70, 70, 70);
+    color: #aaa;
+}
