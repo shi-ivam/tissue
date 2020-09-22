@@ -54,6 +54,14 @@ const tracks = [
   {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: 'http://localhost:5000/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'}
 ]
 
+
+const isIOS = /(iPhone|iPad)/i.test(navigator.userAgent)
+if (isIOS) {
+  const iOSInstructions = document.querySelector('.ios-instructions')
+  css(iOSInstructions, { display: 'block' })
+  throw new Error('IOS not supported')
+}
+
 setupAudio(tracks).then(([audioAnalyser, audio]) => {
   const audioControls = createAudioControls(audio, tracks)
 

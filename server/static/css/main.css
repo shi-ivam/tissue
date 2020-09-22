@@ -76,6 +76,11 @@ html, body {
 .instructions button:hover {
     background-color: rgba(70, 70, 70, 1);
 }
+
+.ios-instructions {
+    display: none;
+}
+
 .controls-container {
     opacity: 0;
     margin: 10px;
