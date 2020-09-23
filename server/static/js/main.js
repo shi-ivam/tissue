@@ -10041,11 +10041,11 @@ const renderBlur = createRenderBlur(regl)
 // Need http://localhost:5000 prefix for the urls to match
 
 const tracks = [
-  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: '/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
-  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: '/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
-  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: '/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
-  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: '/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
-  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: '/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'}
+  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: 'http://localhost:5000/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
+  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: 'http://localhost:5000/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
+  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: 'http://localhost:5000/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
+  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: 'http://localhost:5000/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
+  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: 'http://localhost:5000/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'}
 ]
 
 const isIOS = /(iPhone|iPad)/i.test(navigator.userAgent)
@@ -10341,7 +10341,7 @@ function setupAudio (tracks) {
       resolve([analyser, audio])
     })
 
-    audio.crossOrigin = 'anonymous'
+    audio.crossOrigin = "anonymous";
     audio.src = tracks[0].path
   })
 }

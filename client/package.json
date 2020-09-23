@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:dev":"browserify src/index.js > dist/main.js && live-server dist",
+    "start:dev": "browserify src/index.js > dist/main.js && live-server dist",
     "build:watch": "watchify src/index.js -o dist/main.js",
     "build": "browserify src/index.js > dist/main.js",
     "build:prod": "browserify src/index.js > ../server/static/js/main.js"
@@ -26,6 +26,7 @@
     "glsl-fast-gaussian-blur": "^1.0.2",
     "glsl-hash-blur": "^1.0.3",
     "glslify": "^6.1.0",
+    "live-server": "^1.2.1",
     "new-array": "^1.0.0",
     "regl": "^1.3.0",
     "shuffle-array": "^1.0.1",
