@@ -181,3 +181,69 @@ html, body {
     border-top: 1px solid rgb(70, 70, 70);
     color: #aaa;
 }
+
+.add-music{
+    display: flex;
+    justify-content: flex-end;
+    padding:10px 20px;
+}
+
+.add-music img{
+    height:40px;
+}
+
+.add-music button#prime{
+    background:transparent;
+    border:none;
+}
+
+.add-music p{
+    font-size: 15px;
+    font-weight: 200;
+    text-transform: capitalize;
+    color:#888;
+    margin-bottom: 5px;
+}
+
+.add-music input{
+    margin-bottom: 15px;
+}
+
+.add-music input[type=text]{
+    padding: 5px 10px;
+    background: #dadada;
+    border: none;
+    color: black;
+    outline: none;
+}
+
+.add-music button#upload{
+    padding: 10px;
+    margin-bottom: 10px;
+    font-family: "Comforta";
+    border: none;
+    font-size: 17px;
+    color:white;
+    background: rgb(43, 43, 43);
+}
+
+.inactive-music-add{
+    display: none;
+}
+
+.active-music-add{
+    display: flex;
+    flex-direction: column;
+}
+
+.progress-upload{
+    margin:20px 0;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.progress-upload .bar{
+    width: 0px;
+    height: 3px;
+    background: #aaa;
+}

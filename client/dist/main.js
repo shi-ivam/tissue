@@ -11860,11 +11860,20 @@ const renderToFreqMapFBO = regl({ framebuffer: freqMapFBO })
 const renderBloom = createRenderBloom(regl, canvas)
 const renderBlur = createRenderBlur(regl)
 
+
+// http://localhost:5000/ for dev
+
 const tracks = [
-  {title: 'Fade - Alan Walker', artist:"Alan Walker", path: '/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
-  {title: 'Fade - Alan Walker', artist:"Alan Walker", path: '/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
-  {title: 'Fade - Alan Walker', artist:"Alan Walker", path: '/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
-  {title: 'Fade - Alan Walker', artist:"Alan Walker", path: '/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'}
+  {title: 'Fade [NCS]', artist:"Alan Walker", path: 'http://localhost:5000/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
+  {title: 'Spectre [NCS]', artist:"Alan Walker", path: 'http://localhost:5000/defaultMusic/AlanWalker-Spectre[NCSRelease].mp3'},
+  {title: 'Mortals [NCS]', artist:"Warriyo", path: 'http://localhost:5000/defaultMusic/Warriyo-Mortals(feat.LauraBrehm)[NCSRelease].mp3'},
+  {title: 'Heroes Tonight [NCS]', artist:"Janji", path: 'http://localhost:5000/defaultMusic/Janji-HeroesTonight(feat.Johnning)[NCSRelease].mp3'},
+  {title: '7rings', artist:"Ariana Grande", path: 'http://localhost:5000/defaultMusic/ArianaGrande-7rings.mp3'},
+  {title: 'I Dont Care', artist:"Ed Sheeran & Justin Bieber", path: 'http://localhost:5000/defaultMusic/EdSheeran&JustinBieber-IDontCare[Official].mp3'},
+  {title: 'Sign of The Times', artist:"Harry Styles", path: 'http://localhost:5000/defaultMusic/HarryStyles-SignOfTheTimes.mp3'},
+  {title: 'Dont Wanna Know', artist:"Maroon 5", path: 'http://localhost:5000/defaultMusic/Maroon5-DontWannaKnowft.KendrickLamar.mp3'},
+  {title: 'Girls Like You', artist:"Maroon 5", path: 'http://localhost:5000/defaultMusic/Maroon5-GirlsLikeYouft.CardiB.mp3'},
+  {title: 'Dust Till Dawn', artist:"ZAYN & Sia", path: 'http://localhost:5000/defaultMusic/ZAYN&Sia-DuskTillDawn.mp3'},
 ]
 
 const audio = createPlayer(tracks[0].path)
@@ -11927,11 +11936,11 @@ const settings = {
   blurWeight: 0.8,
   originalWeight: 1.2,
 
-  gridLines: 180,
+  gridLines: 200,
   linesDampening: 0.02,
   linesStiffness: 0.9,
   linesAnimationOffset: 12,
-  gridMaxHeight: 0.28,
+  gridMaxHeight: 0.59,
 
   motionBlur: true,
   motionBlurAmount: 0.45

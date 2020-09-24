@@ -16,7 +16,16 @@ const createTitleCard = require('./title-card')
 const createAudioControls = require('./audio-controls')
 const createRenderBloom = require('./render-bloom')
 const createRenderBlur = require('./render-blur')
-const createRenderGrid = require('./render-grid')
+const createRenderGrid = require('./render-grid');
+const handleMusicAddPrime = require('./handleUpload')
+const handleNewTrackPrime = require('./handleUpload')
+
+
+// Add Event Listener to The Music Add Button 
+
+document.querySelector('.add-music button#prime').addEventListener('click',() => {
+  handleNewTrackPrime()
+})
 
 const titleCard = createTitleCard()
 const canvas = document.querySelector('canvas.viz')
@@ -50,6 +59,9 @@ const renderToFreqMapFBO = regl({ framebuffer: freqMapFBO })
 
 const renderBloom = createRenderBloom(regl, canvas)
 const renderBlur = createRenderBlur(regl)
+
+
+// http://localhost:5000/ for dev
 
 const tracks = [
   {title: 'Fade [NCS]', artist:"Alan Walker", path: '/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
