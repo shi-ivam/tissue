@@ -3,6 +3,7 @@ const cors = require('cors');
 const expressFileUpload = require('express-fileupload');
 const bodyParser = require('body-parser');
 const path = require('path');
+const uuid = require('uuid');
 
 // Initialize Express
 
@@ -37,13 +38,13 @@ app.post('/upload',(req,res) => {
     const id = uuid.v4();
 
 
-    music.mv('static/uploads/' + id + '.mp3' , function(err) {
+    music.mv('static/uploadedMusic/' + id + '.mp3' , function(err) {
 
         if(err){
             console.log(err);
         }
         else{
-            res.header({"Access-Control-Allow-Origin": "*"}).send({type:'Uploaded',uuid:id})
+            res.send({type:'Uploaded',uuid:id})
         }
     });
 })

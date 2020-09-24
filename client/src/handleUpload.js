@@ -1,6 +1,40 @@
+const axios = require('axios');
+
+
+const handleProgress = (progressEvent) => {
+    const percent = (progressEvent.loaded / progressEvent.total) * 100
+    const bar = document.querySelector('.progress-upload .bar')
+    bar.style.width = `${percent}%`;
+
+}
 const handleMusicUpload = () => {
     const form = document.querySelector('.form');
-    console.log(form)
+
+    // Hide the Form 
+
+    form.style.display = "none"
+
+    const mp3 = form.querySelector('#file');
+    const title = form.querySelector('#title');
+    const artist = form.querySelector('#artist');
+
+    const formData = new FormData();
+    formData.append("title",title)
+    formData.append("artist",artist)
+    formData.append("file",mp3.files[0])
+
+    axios.post('/upload',formData,{
+        onUploadProgress: progressEvent => {
+            handleProgress(progressEvent)
+        }
+    })
+    .then(
+        (data) => {
+            document.querySelector('.progress-upload').style.display = "none";
+            console.log('/uploadedMusic/' + data.data.uuid + '.mp3')
+        }
+    )
+
 }
 
 const handleNewTrackPrime = () => {
