@@ -98,6 +98,11 @@ html, body {
     color: #eee;
     position: relative;
 }
+
+.controls-header .title{
+    padding-bottom: 5px;
+}
+
 .github-link {
     position: absolute;
     fill: #888;

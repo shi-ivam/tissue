@@ -35,6 +35,7 @@
     "standard": "^10.0.3",
     "watchify": "^3.11.1",
     "web-audio-analyser": "^2.0.1",
+    "web-audio-player": "^1.3.3",
     "webpack": "^4.44.2"
   },
   "browserify": {

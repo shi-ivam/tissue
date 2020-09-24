@@ -9,6 +9,7 @@ const shuffle = require('shuffle-array')
 const Alea = require('alea')
 const { createSpring } = require('spring-animator')
 const Delaunator = require('delaunator')
+const createPlayer = require('web-audio-player')
 const createAnalyser = require('web-audio-analyser')
 const createCamera = require('./camera')
 const createTitleCard = require('./title-card')
@@ -20,7 +21,11 @@ const createRenderGrid = require('./render-grid')
 const titleCard = createTitleCard()
 const canvas = document.querySelector('canvas.viz')
 const resize = fit(canvas)
-window.addEventListener('resize', () => { resize(); setup() }, false)
+window.addEventListener('resize', () => {
+  resize()
+  if (hasSetUp) setup()
+  titleCard.resize()
+}, false)
 const camera = createCamera(canvas, [2.5, 2.5, 2.5], [0, 0, 0])
 const regl = createRegl(canvas)
 
@@ -46,33 +51,31 @@ const renderToFreqMapFBO = regl({ framebuffer: freqMapFBO })
 const renderBloom = createRenderBloom(regl, canvas)
 const renderBlur = createRenderBlur(regl)
 
-
-// Need http://localhost:5000 prefix for the urls to match
-
 const tracks = [
-  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: 'http://localhost:5000/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
-  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: 'http://localhost:5000/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
-  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: 'http://localhost:5000/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
-  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: 'http://localhost:5000/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
-  {title: 'Fade - Alan Walker', artist:"Alan Walker" , path: 'http://localhost:5000/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'}
+  {title: 'Fade [NCS]', artist:"Alan Walker", path: '/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
+  {title: 'Spectre [NCS]', artist:"Alan Walker", path: '/defaultMusic/AlanWalker-Spectre[NCSRelease].mp3'},
+  {title: 'Mortals [NCS]', artist:"Warriyo", path: '/defaultMusic/Warriyo-Mortals(feat.LauraBrehm)[NCSRelease].mp3'},
+  {title: 'Heroes Tonight [NCS]', artist:"Janji", path: '/defaultMusic/Janji-HeroesTonight(feat.Johnning)[NCSRelease].mp3'},
+  {title: '7rings', artist:"Ariana Grande", path: '/defaultMusic/ArianaGrande-7rings.mp3'},
+  {title: 'I Dont Care', artist:"Ed Sheeran & Justin Bieber", path: '/defaultMusic/EdSheeran&JustinBieber-IDontCare[Official].mp3'},
+  {title: 'Sign of The Times', artist:"Harry Styles", path: '/defaultMusic/HarryStyles-SignOfTheTimes.mp3'},
+  {title: 'Dont Wanna Know', artist:"Maroon 5", path: '/defaultMusic/Maroon5-DontWannaKnowft.KendrickLamar.mp3'},
+  {title: 'Girls Like You', artist:"Maroon 5", path: '/defaultMusic/Maroon5-GirlsLikeYouft.CardiB.mp3'},
+  {title: 'Dust Till Dawn', artist:"ZAYN & Sia", path: '/defaultMusic/ZAYN&Sia-DuskTillDawn.mp3'},
 ]
 
-const isIOS = /(iPhone|iPad)/i.test(navigator.userAgent)
-if (isIOS) {
-  const iOSInstructions = document.querySelector('.ios-instructions')
-  css(iOSInstructions, { display: 'block' })
-  throw new Error('IOS not supported')
-}
-
-setupAudio(tracks).then(([audioAnalyser, audio]) => {
-  const audioControls = createAudioControls(audio, tracks)
+const audio = createPlayer(tracks[0].path)
+audio.crossOrigin = "anonymous"
+audio.on('load', function () {
+  window.audio = audio
+  analyser = createAnalyser(audio.node, audio.context, { audible: true, stereo: false })
+  const audioControls = createAudioControls(audio.element, tracks)
 
   function loop () {
     window.requestAnimationFrame(loop)
     audioControls.tick()
   }
 
-  analyser = audioAnalyser
   analyser.analyser.fftSize = 1024 * 2
   analyser.analyser.minDecibels = -75
   analyser.analyser.maxDecibels = -30
@@ -121,7 +124,7 @@ const settings = {
   blurWeight: 0.8,
   originalWeight: 1.2,
 
-  gridLines: 180,
+  gridLines: 200,
   linesDampening: 0.02,
   linesStiffness: 0.9,
   linesAnimationOffset: 12,
@@ -150,8 +153,12 @@ const gridGUI = gui.addFolder('grid')
 gridGUI.add(settings, 'gridLines', 10, 300).step(1).onChange(setup)
 gridGUI.add(settings, 'linesAnimationOffset', 0, 100).step(1)
 gridGUI.add(settings, 'gridMaxHeight', 0.01, 0.8).step(0.01)
+// gui.add(settings, 'motionBlur')
+// gui.add(settings, 'motionBlurAmount', 0.01, 1).step(0.01)
 
+let hasSetUp = false
 function setup () {
+  hasSetUp = true
   const rand = new Alea(settings.seed)
   points = []
 
@@ -364,21 +371,5 @@ function startLoop () {
       blurWeight: settings.blurWeight,
       originalWeight: settings.originalWeight
     })
-  })
-}
-
-// ///// helpers (to abstract down the line?) //////
-
-function setupAudio (tracks) {
-  return new Promise((resolve, reject) => {
-    const audio = new window.Audio()
-    audio.addEventListener('canplay', function onLoad () {
-      audio.removeEventListener('canplay', onLoad)
-      const analyser = createAnalyser(audio, { audible: true, stereo: false })
-      resolve([analyser, audio])
-    })
-
-    audio.crossOrigin = "anonymous";
-    audio.src = tracks[0].path
   })
 }
