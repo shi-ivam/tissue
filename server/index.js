@@ -22,7 +22,7 @@ app.use(express.static('static'))
 
 // Routes
 
-app.get('/',(req,res) => {
+app.get('*',(req,res) => {
     res.sendFile(path.join(__dirname,'dist','index.html'))
 })
 
@@ -33,8 +33,7 @@ app.post('/upload',(req,res) => {
     var music = req.files.file;
     // var fileName = req.body.fileName;
     // Use the mv() method to place the file somewhere on your server
-
-    
+   
     const id = uuid.v4();
 
 
@@ -48,5 +47,7 @@ app.post('/upload',(req,res) => {
         }
     });
 })
+
+
 
 app.listen(process.env.PORT || 5000)

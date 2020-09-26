@@ -458,7 +458,8 @@ const handleMusicUpload = () => {
 
           setTimeout(
             () => {
-              window.location = '/'
+              window.audio.stop();
+              window.location = `/${data.data.uuid}`
             },
             1000
           )
