@@ -13253,15 +13253,21 @@ module.exports = function createAudioControls (audio, tracks) {
     trackEl.classList.add('track')
     trackEl.addEventListener('click', () => {
       setTrack(tracks[i])
-      audio.play()
     })
-    trackEl.innerHTML = '<span>0' + (1 + i) + '.</span> ' + track.title
+    if (i < 9){
+      trackEl.innerHTML = '<span>0' + (1 + i) + '.</span> ' + track.title 
+    }
+    else {
+      trackEl.innerHTML = '<span>' + (1 + i) + '.</span> ' + track.title
+    }
     track.el = trackEl
   })
 
   function setTrack (track) {
     audio.src = track.path
-    tracks.forEach(t => t.el.classList.remove('selected'))
+    audio.play()
+    // tracks.forEach(t => t.el.classList.remove('selected'))
+    document.querySelectorAll('li.track').forEach(e => e.classList.remove('selected'))
     track.el.classList.add('selected')
     titleEl.innerText = track.title
     artistEl.innerText = track.artist
@@ -13389,61 +13395,6 @@ module.exports = function createRoamingCamera (canvas, center, eye) {
   }
 }
 },{"3d-view-controls":1}],130:[function(require,module,exports){
-const axios = require('axios');
-
-
-const handleProgress = (progressEvent) => {
-    const percent = (progressEvent.loaded / progressEvent.total) * 100
-    const bar = document.querySelector('.progress-upload .bar')
-    bar.style.width = `${percent}%`;
-
-}
-const handleMusicUpload = () => {
-    const form = document.querySelector('.form');
-
-    // Hide the Form 
-
-    form.style.display = "none"
-
-    const mp3 = form.querySelector('#file');
-    const title = form.querySelector('#title');
-    const artist = form.querySelector('#artist');
-
-    const formData = new FormData();
-    formData.append("title",title)
-    formData.append("artist",artist)
-    formData.append("file",mp3.files[0])
-
-    axios.post('/upload',formData,{
-        onUploadProgress: progressEvent => {
-            handleProgress(progressEvent)
-        }
-    })
-    .then(
-        (data) => {
-            document.querySelector('.progress-upload').style.display = "none";
-            console.log('/uploadedMusic/' + data.data.uuid + '.mp3')
-        }
-    )
-
-}
-
-const handleNewTrackPrime = () => {
-
-    const musicAddImage = document.querySelector('.add-music button#prime');
-    musicAddImage.style.display = "none";
-    
-    const elem = document.querySelector('.form');
-    elem.classList.remove('inactive-music-add')
-    elem.classList.add('active-music-add')
-
-    document.querySelector('.add-music button#upload').addEventListener('click',() => {
-        handleMusicUpload()
-    })
-}
-
-module.exports = handleNewTrackPrime;
-},{"axios":5}],131:[function(require,module,exports){
 const createRegl = require('regl')
 const glsl = require('glslify')
 const mat4 = require('gl-mat4')
@@ -13463,15 +13414,9 @@ const createAudioControls = require('./audio-controls')
 const createRenderBloom = require('./render-bloom')
 const createRenderBlur = require('./render-blur')
 const createRenderGrid = require('./render-grid');
-const handleMusicAddPrime = require('./handleUpload')
-const handleNewTrackPrime = require('./handleUpload')
+const axios = require('axios');
 
 
-// Add Event Listener to The Music Add Button 
-
-document.querySelector('.add-music button#prime').addEventListener('click',() => {
-  handleNewTrackPrime()
-})
 
 const titleCard = createTitleCard()
 const canvas = document.querySelector('canvas.viz')
@@ -13509,7 +13454,7 @@ const renderBlur = createRenderBlur(regl)
 
 // http://localhost:5000/ for dev
 
-const tracks = [
+let tracks = [
   {title: 'Fade [NCS]', artist:"Alan Walker", path: '/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
   {title: 'Spectre [NCS]', artist:"Alan Walker", path: '/defaultMusic/AlanWalker-Spectre[NCSRelease].mp3'},
   {title: 'Mortals [NCS]', artist:"Warriyo", path: '/defaultMusic/Warriyo-Mortals(feat.LauraBrehm)[NCSRelease].mp3'},
@@ -13522,8 +13467,17 @@ const tracks = [
   {title: 'Dust Till Dawn', artist:"ZAYN & Sia", path: '/defaultMusic/ZAYN&Sia-DuskTillDawn.mp3'},
 ]
 
+if (typeof localStorage.uploadedTracks !== "undefined"){
+  const prevTracks = JSON.parse(localStorage.uploadedTracks)
+  console.log(prevTracks)
+  if (prevTracks.length > 0){
+    prevTracks.forEach(e => {tracks = tracks.concat(e)})
+  }  
+}
+
+window.tracks = tracks;
 const audio = createPlayer(tracks[0].path)
-audio.crossOrigin = "anonymous"
+
 audio.on('load', function () {
   window.audio = audio
   analyser = createAnalyser(audio.node, audio.context, { audible: true, stereo: false })
@@ -13592,6 +13546,8 @@ const settings = {
   motionBlurAmount: 0.45
 }
 
+window.settings = settings
+
 const gui = new GUI()
 gui.closed = true
 css(gui.domElement.parentElement, {
@@ -13614,7 +13570,8 @@ gridGUI.add(settings, 'gridMaxHeight', 0.01, 0.8).step(0.01)
 // gui.add(settings, 'motionBlur')
 // gui.add(settings, 'motionBlurAmount', 0.01, 1).step(0.01)
 
-let hasSetUp = false
+let hasSetUp = false;
+
 function setup () {
   hasSetUp = true
   const rand = new Alea(settings.seed)
@@ -13803,7 +13760,101 @@ function startLoop () {
     })
   })
 }
-},{"./audio-controls":128,"./camera":129,"./handleUpload":130,"./render-bloom":132,"./render-blur":133,"./render-grid":134,"./title-card":135,"alea":4,"canvas-fit":35,"dat-gui":37,"delaunator":40,"dom-css":41,"gl-mat4":59,"glslify":81,"new-array":97,"regl":106,"shuffle-array":108,"spring-animator":110,"web-audio-analyser":116,"web-audio-player":117}],132:[function(require,module,exports){
+
+
+// Add Event Listener to The Music Add Button 
+
+document.querySelector('.add-music button#prime').addEventListener('click',() => {
+  handleNewTrackPrime()
+})
+
+
+const handleProgress = (progressEvent) => {
+  const percent = (progressEvent.loaded / progressEvent.total) * 100
+  const bar = document.querySelector('.progress-upload .bar')
+  bar.style.width = `${percent}%`;
+}
+
+const handleMusicUpload = () => {
+  const form = document.querySelector('.form');
+
+  // Hide the Form 
+
+  form.style.display = "none"
+
+
+  // Show the Progress Bar
+
+  document.querySelector('.progress-upload').style.display = "flex";
+
+  const mp3 = form.querySelector('#file');
+  const title = form.querySelector('#title').value;
+  const artist = form.querySelector('#artist').value;
+
+  
+  if (!title || !artist){
+      alert('Please Enter A Valid Title And Artist');
+      return
+  }
+
+  const formData = new FormData();
+  formData.append("title",title)
+  formData.append("artist",artist)
+  formData.append("file",mp3.files[0])
+
+  axios.post('/upload',formData,{
+      onUploadProgress: progressEvent => {
+          handleProgress(progressEvent)
+      }
+  })
+  .then(
+      (data) => {
+
+          document.querySelector('.progress-upload').style.display = "none";
+
+          console.log('/uploadedMusic/' + data.data.uuid + '.mp3')
+
+          if (localStorage.uploadedTracks){
+            let prevTracks = JSON.parse(localStorage.uploadedTracks);
+            prevTracks = prevTracks.concat({title,artist,path:'/uploadedMusic/' + data.data.uuid + '.mp3'})
+            localStorage.uploadedTracks = JSON.stringify(prevTracks);
+          }
+          else{
+            let prevTracks = [];
+            prevTracks = prevTracks.concat({title,artist,path:'/uploadedMusic/' + data.data.uuid + '.mp3'})
+            localStorage.uploadedTracks = JSON.stringify(prevTracks);
+          }
+
+          setTimeout(
+            () => {
+              window.location = '/'
+            },
+            1000
+          )
+
+      }
+  )
+
+}
+
+const handleNewTrackPrime = () => {
+
+  const musicAddImage = document.querySelector('.add-music button#prime');
+  musicAddImage.style.display = "none";
+  
+  const elem = document.querySelector('.form');
+  elem.classList.remove('inactive-music-add')
+  elem.classList.add('active-music-add')
+
+  document.querySelector('.add-music button#upload').addEventListener('click',() => {
+
+      handleMusicUpload(title,artist)
+      
+  })
+}
+
+
+},{"./audio-controls":128,"./camera":129,"./render-bloom":131,"./render-blur":132,"./render-grid":133,"./title-card":134,"alea":4,"axios":5,"canvas-fit":35,"dat-gui":37,"delaunator":40,"dom-css":41,"gl-mat4":59,"glslify":81,"new-array":97,"regl":106,"shuffle-array":108,"spring-animator":110,"web-audio-analyser":116,"web-audio-player":117}],131:[function(require,module,exports){
 const glsl = require('glslify')
 
 module.exports = function createRenderBloom (regl, canvas) {
@@ -13879,7 +13930,7 @@ module.exports = function createRenderBloom (regl, canvas) {
     })
   }
 }
-},{"glslify":81}],133:[function(require,module,exports){
+},{"glslify":81}],132:[function(require,module,exports){
 const glsl = require('glslify')
 
 module.exports = function createRenderBlur (regl) {
@@ -13902,7 +13953,7 @@ module.exports = function createRenderBlur (regl) {
     primitive: 'triangles'
   })
 }
-},{"glslify":81}],134:[function(require,module,exports){
+},{"glslify":81}],133:[function(require,module,exports){
 const glsl = require('glslify')
 const { createSpring } = require('spring-animator')
 
@@ -14018,7 +14069,7 @@ module.exports = function createRenderGrid (regl, settings) {
     render({ frequencyVals, gridMaxHeight, multiplier })
   }
 }
-},{"glslify":81,"spring-animator":110}],135:[function(require,module,exports){
+},{"glslify":81,"spring-animator":110}],134:[function(require,module,exports){
 const fit = require('canvas-fit')
 const css = require('dom-css')
 const Alea = require('alea')
@@ -14261,4 +14312,4 @@ function printText (context, text, size) {
   context.fillStyle = 'rgb(0, 0, 0)'
   context.fillText(text, context.canvas.width / 2, context.canvas.height / 3)
 }
-},{"alea":4,"canvas-fit":35,"dom-css":41,"spring-animator":110}]},{},[131]);
+},{"alea":4,"canvas-fit":35,"dom-css":41,"spring-animator":110}]},{},[130]);

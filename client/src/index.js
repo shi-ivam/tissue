@@ -17,15 +17,9 @@ const createAudioControls = require('./audio-controls')
 const createRenderBloom = require('./render-bloom')
 const createRenderBlur = require('./render-blur')
 const createRenderGrid = require('./render-grid');
-const handleMusicAddPrime = require('./handleUpload')
-const handleNewTrackPrime = require('./handleUpload')
+const axios = require('axios');
 
 
-// Add Event Listener to The Music Add Button 
-
-document.querySelector('.add-music button#prime').addEventListener('click',() => {
-  handleNewTrackPrime()
-})
 
 const titleCard = createTitleCard()
 const canvas = document.querySelector('canvas.viz')
@@ -63,7 +57,7 @@ const renderBlur = createRenderBlur(regl)
 
 // http://localhost:5000/ for dev
 
-const tracks = [
+let tracks = [
   {title: 'Fade [NCS]', artist:"Alan Walker", path: '/defaultMusic/AlanWalker-Fade[NCSRelease].mp3'},
   {title: 'Spectre [NCS]', artist:"Alan Walker", path: '/defaultMusic/AlanWalker-Spectre[NCSRelease].mp3'},
   {title: 'Mortals [NCS]', artist:"Warriyo", path: '/defaultMusic/Warriyo-Mortals(feat.LauraBrehm)[NCSRelease].mp3'},
@@ -76,8 +70,17 @@ const tracks = [
   {title: 'Dust Till Dawn', artist:"ZAYN & Sia", path: '/defaultMusic/ZAYN&Sia-DuskTillDawn.mp3'},
 ]
 
+if (typeof localStorage.uploadedTracks !== "undefined"){
+  const prevTracks = JSON.parse(localStorage.uploadedTracks)
+  console.log(prevTracks)
+  if (prevTracks.length > 0){
+    prevTracks.forEach(e => {tracks = tracks.concat(e)})
+  }  
+}
+
+window.tracks = tracks;
 const audio = createPlayer(tracks[0].path)
-audio.crossOrigin = "anonymous"
+
 audio.on('load', function () {
   window.audio = audio
   analyser = createAnalyser(audio.node, audio.context, { audible: true, stereo: false })
@@ -146,6 +149,8 @@ const settings = {
   motionBlurAmount: 0.45
 }
 
+window.settings = settings
+
 const gui = new GUI()
 gui.closed = true
 css(gui.domElement.parentElement, {
@@ -168,7 +173,8 @@ gridGUI.add(settings, 'gridMaxHeight', 0.01, 0.8).step(0.01)
 // gui.add(settings, 'motionBlur')
 // gui.add(settings, 'motionBlurAmount', 0.01, 1).step(0.01)
 
-let hasSetUp = false
+let hasSetUp = false;
+
 function setup () {
   hasSetUp = true
   const rand = new Alea(settings.seed)
@@ -385,3 +391,96 @@ function startLoop () {
     })
   })
 }
+
+
+// Add Event Listener to The Music Add Button 
+
+document.querySelector('.add-music button#prime').addEventListener('click',() => {
+  handleNewTrackPrime()
+})
+
+
+const handleProgress = (progressEvent) => {
+  const percent = (progressEvent.loaded / progressEvent.total) * 100
+  const bar = document.querySelector('.progress-upload .bar')
+  bar.style.width = `${percent}%`;
+}
+
+const handleMusicUpload = () => {
+  const form = document.querySelector('.form');
+
+  // Hide the Form 
+
+  form.style.display = "none"
+
+
+  // Show the Progress Bar
+
+  document.querySelector('.progress-upload').style.display = "flex";
+
+  const mp3 = form.querySelector('#file');
+  const title = form.querySelector('#title').value;
+  const artist = form.querySelector('#artist').value;
+
+  
+  if (!title || !artist){
+      alert('Please Enter A Valid Title And Artist');
+      return
+  }
+
+  const formData = new FormData();
+  formData.append("title",title)
+  formData.append("artist",artist)
+  formData.append("file",mp3.files[0])
+
+  axios.post('/upload',formData,{
+      onUploadProgress: progressEvent => {
+          handleProgress(progressEvent)
+      }
+  })
+  .then(
+      (data) => {
+
+          document.querySelector('.progress-upload').style.display = "none";
+
+          console.log('/uploadedMusic/' + data.data.uuid + '.mp3')
+
+          if (localStorage.uploadedTracks){
+            let prevTracks = JSON.parse(localStorage.uploadedTracks);
+            prevTracks = prevTracks.concat({title,artist,path:'/uploadedMusic/' + data.data.uuid + '.mp3'})
+            localStorage.uploadedTracks = JSON.stringify(prevTracks);
+          }
+          else{
+            let prevTracks = [];
+            prevTracks = prevTracks.concat({title,artist,path:'/uploadedMusic/' + data.data.uuid + '.mp3'})
+            localStorage.uploadedTracks = JSON.stringify(prevTracks);
+          }
+
+          setTimeout(
+            () => {
+              window.location = '/'
+            },
+            1000
+          )
+
+      }
+  )
+
+}
+
+const handleNewTrackPrime = () => {
+
+  const musicAddImage = document.querySelector('.add-music button#prime');
+  musicAddImage.style.display = "none";
+  
+  const elem = document.querySelector('.form');
+  elem.classList.remove('inactive-music-add')
+  elem.classList.add('active-music-add')
+
+  document.querySelector('.add-music button#upload').addEventListener('click',() => {
+
+      handleMusicUpload(title,artist)
+      
+  })
+}
+

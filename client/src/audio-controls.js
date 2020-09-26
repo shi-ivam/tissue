@@ -16,15 +16,21 @@ module.exports = function createAudioControls (audio, tracks) {
     trackEl.classList.add('track')
     trackEl.addEventListener('click', () => {
       setTrack(tracks[i])
-      audio.play()
     })
-    trackEl.innerHTML = '<span>0' + (1 + i) + '.</span> ' + track.title
+    if (i < 9){
+      trackEl.innerHTML = '<span>0' + (1 + i) + '.</span> ' + track.title 
+    }
+    else {
+      trackEl.innerHTML = '<span>' + (1 + i) + '.</span> ' + track.title
+    }
     track.el = trackEl
   })
 
   function setTrack (track) {
     audio.src = track.path
-    tracks.forEach(t => t.el.classList.remove('selected'))
+    audio.play()
+    // tracks.forEach(t => t.el.classList.remove('selected'))
+    document.querySelectorAll('li.track').forEach(e => e.classList.remove('selected'))
     track.el.classList.add('selected')
     titleEl.innerText = track.title
     artistEl.innerText = track.artist
