@@ -185,8 +185,8 @@ html, body {
 
 .add-music{
     display: flex;
-    justify-content: flex-end;
-    padding:10px 20px;
+    justify-content: space-between;
+    padding:10px 20px 20px 20px;
 }
 
 .add-music img{
@@ -196,6 +196,19 @@ html, body {
 .add-music button#prime{
     background:transparent;
     border:none;
+    outline: none;
+}
+
+.add-music button#delete-uploaded{
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+    color:rgb(145, 145, 145);
+    background: transparent;
+    /* border:1px solid rgb(230, 230, 230); */
+    border:none;
+    box-shadow: 0 -2px 30px rgba(60, 60, 60, 0.65);
+    font-family: "Comforta";
 }
 
 .add-music p{
@@ -218,14 +231,21 @@ html, body {
     outline: none;
 }
 
-.add-music button#upload{
+.add-music button#upload,.add-music button#upload-cancel{
     padding: 10px;
     margin-bottom: 10px;
     font-family: "Comforta";
     border: none;
     font-size: 17px;
     color:white;
+    background: rgb(22, 22, 22);
+    cursor: pointer;
+}
+
+
+.add-music button#upload-cancel{
     background: rgb(43, 43, 43);
+
 }
 
 .inactive-music-add{

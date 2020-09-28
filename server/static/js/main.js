@@ -13417,7 +13417,6 @@ const createRenderGrid = require('./render-grid');
 const axios = require('axios');
 
 
-
 const titleCard = createTitleCard()
 const canvas = document.querySelector('canvas.viz')
 const resize = fit(canvas)
@@ -13768,6 +13767,18 @@ document.querySelector('.add-music button#prime').addEventListener('click',() =>
   handleNewTrackPrime()
 })
 
+document.querySelector('.add-music button#delete-uploaded').addEventListener('click',() => {
+  localStorage.clear();
+  window.location = "/"
+})
+
+document.querySelector('#upload-cancel').addEventListener('click',() => {
+  const elem = document.querySelector('.form');
+  elem.classList.add('inactive-music-add')
+  elem.classList.remove('active-music-add')
+  document.querySelector('.add-music button#prime').style.display = "block"
+  document.querySelector('.add-music button#delete-uploaded').style.display = "block";
+})
 
 const handleProgress = (progressEvent) => {
   const percent = (progressEvent.loaded / progressEvent.total) * 100
@@ -13776,11 +13787,14 @@ const handleProgress = (progressEvent) => {
 }
 
 const handleMusicUpload = () => {
+  
+
   const form = document.querySelector('.form');
 
   // Hide the Form 
 
-  form.style.display = "none"
+  form.classList.remove('active-music-add')
+  form.classList.add('inactive-music-add')
 
 
   // Show the Progress Bar
@@ -13792,8 +13806,11 @@ const handleMusicUpload = () => {
   const artist = form.querySelector('#artist').value;
 
   
-  if (!title || !artist){
-      alert('Please Enter A Valid Title And Artist');
+  if (!title || !artist || mp3.files.length == 0){
+      alert('Please Enter All The Values');
+      document.querySelector('.progress-upload').style.display = "none";
+      document.querySelector('.add-music button#prime').style.display = "block"
+      document.querySelector('.add-music button#delete-uploaded').style.display = "block";
       return
   }
 
@@ -13801,6 +13818,8 @@ const handleMusicUpload = () => {
   formData.append("title",title)
   formData.append("artist",artist)
   formData.append("file",mp3.files[0])
+
+  
 
   axios.post('/upload',formData,{
       onUploadProgress: progressEvent => {
@@ -13840,7 +13859,14 @@ const handleMusicUpload = () => {
 
 const handleNewTrackPrime = () => {
 
+  
+  if (tracks.length == 20){
+    alert('You Cannot Upload More Than 10 Songs')
+    return
+  }
+
   const musicAddImage = document.querySelector('.add-music button#prime');
+  document.querySelector('.add-music button#delete-uploaded').style.display = "none";
   musicAddImage.style.display = "none";
   
   const elem = document.querySelector('.form');
